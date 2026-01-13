@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMPUTERS_777 - Магазин мониторов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://cdn-img.birbir.uz/i/800x800-fit/files/b1/31/33d4e366d27e67ff6def440b47a7.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0088cc 0%, #005f8a 100%);
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .brand-section {
+            margin: 40px 0;
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .brand-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .brand-title {
+            color: #0088cc;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #eaeaea;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px);
+        }
+
+        .product-image {
+            height: 200px;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            padding: 15px;
+        }
+
+        .product-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-model {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        .product-specs {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0088cc;
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart {
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-to-cart:hover {
+            background-color: #0073b1;
+            transform: translateY(-2px);
+        }
+
+        /* Стили для корзины */
+        .cart-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 380px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+            transition: right 0.4s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            background: linear-gradient(135deg, #0088cc 0%, #005f8a 100%);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-header h3 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-image {
+            width: 70px;
+            height: 70px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .cart-item-image img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+        }
+
+        .cart-item-model {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        .cart-item-price {
+            color: #0088cc;
+            font-weight: 600;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .quantity-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .quantity-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .cart-item-quantity {
+            font-weight: 600;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .remove-item {
+            color: #ff6b6b;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 5px;
+            font-size: 1.1rem;
+        }
+
+        .cart-footer {
+            padding: 25px;
+            border-top: 1px solid #eee;
+            background-color: #f9f9f9;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: #25D366;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .checkout-btn:hover {
+            background-color: #1da851;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.2);
+        }
+
+        .cart-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #0088cc;
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.4);
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .cart-icon:hover {
+            background-color: #0073b1;
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ff6b6b;
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        .empty-cart i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+
+        .telegram-link {
+            color: #0088cc;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .telegram-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .cart-icon {
+                width: 60px;
+                height: 60px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .brand-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-desktop"></i> COMPUTERS_777</h1>
+            <p>Магазин мониторов премиум-класса</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="brand-section">
+            <h2 class="brand-title"><i class="fas fa-tv"></i> ASUS MONITORS</h2>
+            <div class="products-grid" id="asus-products">
+                <!-- ASUS мониторы будут добавлены через JavaScript -->
+            </div>
+        </div>
+
+        <div class="brand-section">
+            <h2 class="brand-title"><i class="fas fa-tv"></i> DELL MONITORS</h2>
+            <div class="products-grid" id="dell-products">
+                <!-- DELL мониторы будут добавлены через JavaScript -->
+            </div>
+        </div>
+
+        <div class="brand-section">
+            <h2 class="brand-title"><i class="fas fa-tv"></i> BENQ MONITORS</h2>
+            <div class="products-grid" id="benq-products">
+                <!-- BENQ мониторы будут добавлены через JavaScript -->
+            </div>
+        </div>
+
+        <div class="brand-section">
+            <h2 class="brand-title"><i class="fas fa-tv"></i> LG MONITORS</h2>
+            <div class="products-grid" id="lg-products">
+                <!-- LG мониторы будут добавлены через JavaScript -->
+            </div>
+        </div>
+
+        <div class="brand-section">
+            <h2 class="brand-title"><i class="fas fa-tv"></i> SAMSUNG MONITORS</h2>
+            <div class="products-grid" id="samsung-products">
+                <!-- SAMSUNG мониторы будут добавлены через JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Иконка корзины -->
+    <div class="cart-icon" id="cartIcon">
+        <i class="fas fa-shopping-cart"></i>
+        <div class="cart-count" id="cartCount">0</div>
+    </div>
+
+    <!-- Боковая панель корзины -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Ваша корзина</h3>
+            <button class="close-cart" id="closeCart"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Товары в корзине будут добавлены через JavaScript -->
+            <div class="empty-cart" id="emptyCart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Ваша корзина пуста</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Итого:</span>
+                <span id="cartTotal">0 $</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">
+                <i class="fab fa-telegram"></i> Купить через Telegram
+            </button>
+            <a href="https://t.me/COMPUTERS_7777" target="_blank" class="telegram-link">
+                <i class="fab fa-telegram"></i> Перейти в канал COMPUTERS_7777
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 COMPUTERS_777. Все права защищены.</p>
+            <p>Свяжитесь с нами: <a href="https://t.me/COMPUTERS_7777" style="color: #0088cc;">@COMPUTERS_7777</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Данные о мониторах
+        const monitors = {
+            asus: [
+                { model: "VG249QG", specs: "FHD IPS 120HZ", price: 140, image: "data:image/jpeg;base64,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" },
+                { model: "VG249QM5A", specs: "FHD 240HZ IPS FLAT", price: 170, image: "data:image/jpeg;base64,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" },
+                { model: "PA278CFRV", specs: "2K 100HZ IPS FLAT", price: 520, image: "data:image/jpeg;base64,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" },
+                { model: "VG27AQL5A", specs: "2K 210HZ IPS FLAT", price: 250, image: "data:image/jpeg;base64,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" },
+                { model: "VG279QG", specs: "FHD IPS 120HZ", price: 170, image: "https://maxcom.uz/storage/product/6L4RrhB1YjWbZtoOTN7N9TgFRl9gJhH9W75lGh0F.png" },
+                { model: "VG279QM", specs: "FHD 280HZ IPS FLAT", price: 300, image: "https://maxcom.uz/storage/product/IwziCvEvgrFdV5hXyvXeWA6yyfYg9lecgiPQ6jcm.png" },
+                { model: "PA279CRV", specs: "4K 75HZ IPS FLAT", price: 570, image: "https://via.placeholder.com/300x200/0088cc/FFFFFF?text=ASUS+PA279CRV" },
+                { model: "XG27UCS", specs: "4K 160HZ IPS FLAT", price: 500, image: "https://via.placeholder.com/300x200/0088cc/FFFFFF?text=ASUS+XG27UCS" },
+                { model: "PA329CV", specs: "4K 60HZ IPS FLAT", price: 850, image: "https://via.placeholder.com/300x200/0088cc/FFFFFF?text=ASUS+PA329CV" },
+                { model: "VG34AQL3A", specs: "3K 180HZ CURVED", price: 350, image: "https://via.placeholder.com/300x200/0088cc/FFFFFF?text=ASUS+VG34AQL3A" }
+            ],
+            dell: [
+                { model: "S2425H", specs: "FHD 100HZ IPS FLAT", price: 170, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+S2425H" },
+                { model: "AW2525HM", specs: "FHD 320HZ FAST IPS FLAT", price: 390, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+AW2525HM" },
+                { model: "AW2524HF", specs: "FHD 500HZ FAST IPS FLAT", price: 720, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+AW2524HF" },
+                { model: "AW2724HF", specs: "FHD 360HZ FAST IPS FLAT", price: 520, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+AW2724HF" },
+                { model: "AW2724DM", specs: "2K 180HZ FAST IPS FLAT", price: 350, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+AW2724DM" },
+                { model: "AW2725DF", specs: "2K 360HZ QD-OLED FLAT", price: 800, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+AW2725DF" },
+                { model: "AW2725QF", specs: "4K 180HZ IPS FLAT", price: 750, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+AW2725QF" },
+                { model: "AW2725Q", specs: "4K 240HZ QD-OLED FLAT", price: 1100, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+AW2725Q" },
+                { model: "S2725H", specs: "FHD 100HZ IPS FLAT", price: 190, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+S2725H" },
+                { model: "S2725HS", specs: "FHD 100HZ IPS FLAT", price: 200, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+S2725HS" },
+                { model: "P2725DE", specs: "2K 100HZ IPS FLAT", price: 390, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+P2725DE" },
+                { model: "P2723D", specs: "2K 75HZ IPS FLAT", price: 340, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+P2723D" },
+                { model: "P2723DE", specs: "2K 75HZ IPS FLAT", price: 370, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+P2723DE" },
+                { model: "S2722DC", specs: "2K 75HZ IPS FLAT", price: 365, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+S2722DC" },
+                { model: "S2725DS", specs: "2K 75HZ IPS FLAT", price: 280, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+S2725DS" },
+                { model: "U2724D", specs: "2K 120HZ IPS FLAT", price: 440, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+U2724D" },
+                { model: "U2724DE", specs: "2K 120HZ IPS FLAT", price: 650, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+U2724DE" },
+                { model: "P2723QE", specs: "4K IPS 75HZ IPS FLAT", price: 470, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+P2723QE" },
+                { model: "U2725QE", specs: "4K 120HZ IPS FLAT", price: 680, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+U2725QE" },
+                { model: "P3223QE", specs: "4K 75HZ IPS FLAT", price: 670, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+P3223QE" },
+                { model: "P3223DE", specs: "2K 75HZ IPS FLAT", price: 500, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+P3223DE" },
+                { model: "U3223QE", specs: "4K 75HZ IPS FLAT", price: 900, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+U3223QE" },
+                { model: "S3225QS", specs: "4K 120HZ VA FLAT", price: 480, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+S3225QS" },
+                { model: "AW3225DM", specs: "2K 180HZ VA CURVED", price: 430, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+AW3225DM" },
+                { model: "AW3225QF", specs: "4K 240HZ OLED CURVED", price: 1400, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+AW3225QF" },
+                { model: "U3425WE", specs: "3K 60HZ IPS CURVED", price: 1000, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+U3425WE" },
+                { model: "AW3425DWM", specs: "3K 180HZ", price: 510, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+AW3425DWM" },
+                { model: "S3425DW", specs: "3K 120HZ VA CURVED", price: 550, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+S3425DW" },
+                { model: "U4924DW", specs: "5K 60HZ IPS CURVED", price: 1550, image: "https://via.placeholder.com/300x200/0076CC/FFFFFF?text=DELL+U4924DW" }
+            ],
+            benq: [
+                { model: "XL2586X", specs: "FHD 540HZ FAST TN FLAT", price: 1220, image: "https://via.placeholder.com/300x200/0099E5/FFFFFF?text=BENQ+XL2586X" }
+            ],
+            lg: [
+                { model: "24MR400", specs: "FHD 100HZ IPS FLAT", price: 110, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+24MR400" },
+                { model: "24GS50F", specs: "FHD 180HZ FLAT", price: 180, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+24GS50F" },
+                { model: "27GS50F", specs: "FHD 180HZ FLAT", price: 190, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+27GS50F" },
+                { model: "27GS60QC", specs: "2K 180HZ VA CURVED", price: 285, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+27GS60QC" },
+                { model: "27UP550", specs: "4K 60HZ IPS FLAT", price: 390, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+27UP550" },
+                { model: "27UP850K", specs: "4K 60HZ IPS FLAT", price: 450, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+27UP850K" },
+                { model: "27GS75Q", specs: "2K 200HZ IPS FLAT", price: 350, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+27GS75Q" },
+                { model: "32GS60QC", specs: "2K 180HZ VA CURVED", price: 350, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+32GS60QC" },
+                { model: "32GS75Q", specs: "2K 180HZ IPS FLAT", price: 440, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+32GS75Q" },
+                { model: "32GS95UV", specs: "4K 240HZ OLED FLAT", price: 1450, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+32GS95UV" },
+                { model: "34GP63A", specs: "3K 160HZ CURVED", price: 440, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+34GP63A" },
+                { model: "34WR55QC", specs: "3K 100HZ CURVED", price: 430, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+34WR55QC" },
+                { model: "34WQ75C", specs: "3K 60HZ CURVED IPS", price: 550, image: "https://via.placeholder.com/300x200/A50034/FFFFFF?text=LG+34WQ75C" }
+            ],
+            samsung: [
+                { model: "LS24C360EAMXUE", specs: "FHD 75HZ CURVED", price: 115, image: "https://via.placeholder.com/300x200/1428A0/FFFFFF?text=SAMSUNG+LS24C360" },
+                { model: "LS27C360EAMXUE", specs: "FHD 75HZ CURVED", price: 135, image: "https://via.placeholder.com/300x200/1428A0/FFFFFF?text=SAMSUNG+LS27C360" },
+                { model: "LS27FG602SMXUE", specs: "2K 500HZ OLED FLAT", price: 1100, image: "https://via.placeholder.com/300x200/1428A0/FFFFFF?text=SAMSUNG+LS27FG602" },
+                { model: "LS32C390EAMXUE", specs: "FHD 75HZ CURVED", price: 240, image: "https://via.placeholder.com/300x200/1428A0/FFFFFF?text=SAMSUNG+LS32C390" },
+                { model: "LS32DG702EUXEN", specs: "4K 144HZ FLAT IPS", price: 640, image: "https://via.placeholder.com/300x200/1428A0/FFFFFF?text=SAMSUNG+LS32DG702" },
+                { model: "LS32FG810SMXUE", specs: "4K 240HZ OLED FLAT", price: 1450, image: "https://via.placeholder.com/300x200/1428A0/FFFFFF?text=SAMSUNG+LS32FG810" },
+                { model: "LS34C500GAMXUE", specs: "3K 100HZ VA FLAT", price: 350, image: "https://via.placeholder.com/300x200/1428A0/FFFFFF?text=SAMSUNG+LS34C500" },
+                { model: "LC34G55TWWMXZN", specs: "3K 165HZ VA CURVED", price: 430, image: "https://via.placeholder.com/300x200/1428A0/FFFFFF?text=SAMSUNG+LC34G55T" },
+                { model: "LS34DG852SMXUE", specs: "3K 175HZ OLED CURVED", price: 1000, image: "https://via.placeholder.com/300x200/1428A0/FFFFFF?text=SAMSUNG+LS34DG852" },
+                { model: "LS34C650GAMXUE", specs: "3K 100HZ CURVED", price: 550, image: "https://via.placeholder.com/300x200/1428A0/FFFFFF?text=SAMSUNG+LS34C650" }
+            ]
+        };
+
+        // Корзина
+        let cart = [];
+
+        // DOM элементы
+        const cartIcon = document.getElementById('cartIcon');
+        const cartSidebar = document.getElementById('cartSidebar');
+        const closeCart = document.getElementById('closeCart');
+        const cartItems = document.getElementById('cartItems');
+        const emptyCart = document.getElementById('emptyCart');
+        const cartCount = document.getElementById('cartCount');
+        const cartTotal = document.getElementById('cartTotal');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+
+        // Инициализация страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Загрузка корзины из localStorage
+            loadCartFromStorage();
+
+            // Отображение товаров
+            displayProducts();
+
+            // Обновление отображения корзины
+            updateCartDisplay();
+
+            // Добавление обработчиков событий
+            cartIcon.addEventListener('click', toggleCart);
+            closeCart.addEventListener('click', toggleCart);
+            checkoutBtn.addEventListener('click', checkout);
+
+            // Закрытие корзины при клике вне ее области
+            document.addEventListener('click', function(event) {
+                if (!cartSidebar.contains(event.target) && !cartIcon.contains(event.target) && cartSidebar.classList.contains('active')) {
+                    toggleCart();
+                }
+            });
+        });
+
+        // Функция отображения товаров
+        function displayProducts() {
+            // ASUS
+            const asusContainer = document.getElementById('asus-products');
+            monitors.asus.forEach(monitor => {
+                asusContainer.appendChild(createProductCard(monitor, 'asus'));
+            });
+
+            // DELL
+            const dellContainer = document.getElementById('dell-products');
+            monitors.dell.forEach(monitor => {
+                dellContainer.appendChild(createProductCard(monitor, 'dell'));
+            });
+
+            // BENQ
+            const benqContainer = document.getElementById('benq-products');
+            monitors.benq.forEach(monitor => {
+                benqContainer.appendChild(createProductCard(monitor, 'benq'));
+            });
+
+            // LG
+            const lgContainer = document.getElementById('lg-products');
+            monitors.lg.forEach(monitor => {
+                lgContainer.appendChild(createProductCard(monitor, 'lg'));
+            });
+
+            // SAMSUNG
+            const samsungContainer = document.getElementById('samsung-products');
+            monitors.samsung.forEach(monitor => {
+                samsungContainer.appendChild(createProductCard(monitor, 'samsung'));
+            });
+        }
+
+        // Функция создания карточки товара
+        function createProductCard(monitor, brand) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <div class="product-image">
+                    <img src="${monitor.image}" alt="${monitor.model}">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-model">${monitor.model}</h3>
+                    <p class="product-specs">${monitor.specs}</p>
+                    <div class="product-price">${monitor.price} $</div>
+                    <button class="add-to-cart" data-brand="${brand}" data-model="${monitor.model}" data-specs="${monitor.specs}" data-price="${monitor.price}" data-image="${monitor.image}">
+                        <i class="fas fa-cart-plus"></i> Добавить в корзину
+                    </button>
+                </div>
+            `;
+
+            // Добавление обработчика события для кнопки добавления в корзину
+            const addButton = card.querySelector('.add-to-cart');
+            addButton.addEventListener('click', function() {
+                addToCart({
+                    brand: this.dataset.brand,
+                    model: this.dataset.model,
+                    specs: this.dataset.specs,
+                    price: parseInt(this.dataset.price),
+                    image: this.dataset.image
+                });
+            });
+
+            return card;
+        }
+
+        // Функция добавления товара в корзину
+        function addToCart(product) {
+            // Проверка, есть ли товар уже в корзине
+            const existingItem = cart.find(item => item.model === product.model);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                product.quantity = 1;
+                cart.push(product);
+            }
+
+            // Сохранение корзины в localStorage
+            saveCartToStorage();
+
+            // Обновление отображения корзины
+            updateCartDisplay();
+
+            // Анимация иконки корзины
+            animateCartIcon();
+
+            // Показать боковую панель корзины
+            if (!cartSidebar.classList.contains('active')) {
+                toggleCart();
+            }
+        }
+
+        // Функция удаления товара из корзины
+        function removeFromCart(model) {
+            cart = cart.filter(item => item.model !== model);
+
+            // Сохранение корзины в localStorage
+            saveCartToStorage();
+
+            // Обновление отображения корзины
+            updateCartDisplay();
+        }
+
+        // Функция обновления количества товара в корзине
+        function updateQuantity(model, change) {
+            const item = cart.find(item => item.model === model);
+
+            if (item) {
+                item.quantity += change;
+
+                if (item.quantity <= 0) {
+                    removeFromCart(model);
+                } else {
+                    // Сохранение корзины в localStorage
+                    saveCartToStorage();
+
+                    // Обновление отображения корзины
+                    updateCartDisplay();
+                }
+            }
+        }
+
+        // Функция обновления отображения корзины
+        function updateCartDisplay() {
+            // Обновление счетчика товаров в корзине
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+
+            // Обновление общей суммы
+            const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            cartTotal.textContent = `${totalPrice} $`;
+
+            // Очистка контейнера товаров в корзине
+            cartItems.innerHTML = '';
+
+            // Отображение сообщения о пустой корзине
+            if (cart.length === 0) {
+                cartItems.appendChild(emptyCart);
+                emptyCart.style.display = 'block';
+                return;
+            } else {
+                emptyCart.style.display = 'none';
+            }
+
+            // Отображение товаров в корзине
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-image">
+                        <img src="${item.image}" alt="${item.model}">
+                    </div>
+                    <div class="cart-item-info">
+                        <div class="cart-item-model">${item.model}</div>
+                        <div class="cart-item-specs">${item.specs}</div>
+                        <div class="cart-item-price">${item.price} $</div>
+                        <div class="cart-item-controls">
+                            <button class="quantity-btn decrease" data-model="${item.model}">-</button>
+                            <span class="cart-item-quantity">${item.quantity}</span>
+                            <button class="quantity-btn increase" data-model="${item.model}">+</button>
+                            <button class="remove-item" data-model="${item.model}"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+
+                cartItems.appendChild(cartItem);
+            });
+
+            // Добавление обработчиков событий для кнопок в корзине
+            document.querySelectorAll('.decrease').forEach(button => {
+                button.addEventListener('click', function() {
+                    updateQuantity(this.dataset.model, -1);
+                });
+            });
+
+            document.querySelectorAll('.increase').forEach(button => {
+                button.addEventListener('click', function() {
+                    updateQuantity(this.dataset.model, 1);
+                });
+            });
+
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    removeFromCart(this.dataset.model);
+                });
+            });
+        }
+
+        // Функция переключения отображения корзины
+        function toggleCart() {
+            cartSidebar.classList.toggle('active');
+        }
+
+        // Функция оформления заказа
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Ваша корзина пуста!');
+                return;
+            }
+
+            // Формирование сообщения для Telegram
+            let message = "Здравствуйте! Я хочу купить следующие мониторы:%0A%0A";
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item.brand.toUpperCase()} ${item.model} (${item.specs}) - ${item.quantity} шт. × ${item.price}$ = ${item.quantity * item.price}$%0A`;
+                total += item.quantity * item.price;
+            });
+
+            message += `%0AИтого: ${total}$%0A%0AПожалуйста, свяжитесь со мной для оформления заказа.`;
+
+            // Открытие Telegram с предзаполненным сообщением
+            window.open(`https://t.me/COMPUTERS_7777?text=${message}`, '_blank');
+
+            // Очистка корзины после оформления заказа
+            cart = [];
+            saveCartToStorage();
+            updateCartDisplay();
+            toggleCart();
+
+            alert('Заказ оформлен! Открывается Telegram для подтверждения заказа.');
+        }
+
+        // Функция анимации иконки корзины
+        function animateCartIcon() {
+            cartIcon.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                cartIcon.style.transform = 'scale(1)';
+            }, 300);
+        }
+
+        // Функция сохранения корзины в localStorage
+        function saveCartToStorage() {
+            localStorage.setItem('monitorCart', JSON.stringify(cart));
+        }
+
+        // Функция загрузки корзины из localStorage
+        function loadCartFromStorage() {
+            const savedCart = localStorage.getItem('monitorCart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+            }
+        }
+    </script>
+</body>
+</html>
